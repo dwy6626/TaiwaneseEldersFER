@@ -5,3 +5,6 @@ from PIL import Image
 SAMPLE_IMAGE = Image.fromarray(
     (np.random.rand(150, 150, 3) * 256).astype('uint8')
 )
+
+
+SAMPLE_DATA = ['./test/sample/sample.jpg'], [3]
