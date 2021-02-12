@@ -11,6 +11,9 @@ from torch import nn
 from torchvision import transforms
 
 
+DEFAULT_WEIGHT_PATH = 'weight/best.ckpt'
+
+
 class Flatten(nn.Module):
     def __init__(self):
         super(Flatten, self).__init__()
@@ -100,16 +103,8 @@ class VGG13(nn.Module):
         else:
             checkpoint = torch.load(ckpt_path, map_location=torch.device('cpu'))
 
-        # delete non-torch-key:
-        new_dict = {}
-        for k, v in checkpoint['state_dict'].items():
-            if k.startswith('metric.'):
-                continue
-            if k.startswith('model.'):
-                new_dict[k[6:]] = v
-
         model = cls()
-        model.load_state_dict(new_dict)
+        model.load_state_dict(checkpoint)
         return model
 
 
