@@ -17,8 +17,13 @@ python -m pip install -r requirements.txt
 ## Run model
 
 ```
-python main.py --input example_face.png --checkpoint weight/fine_tune.ckpt
+python main.py --input example_face.png --checkpoint weight/best.ckpt
 ```
+
+There are 2 different pretrained weights
+
+- `best.ckpt` is the cross-dataset model
+- `fine_tune.ckpt` is the fine-tuned weights on TW old faces.
 
 ## Run Test
 

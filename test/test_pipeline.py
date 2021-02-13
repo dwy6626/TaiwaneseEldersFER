@@ -5,7 +5,7 @@ from PIL import Image
 import numpy as np
 
 from src import torch_utils
-from src import preprocess
+from src import pipeline
 from src.model import vgg13
 from fixture import SAMPLE_DATA
 
@@ -24,8 +24,8 @@ class TestPipeline(unittest.TestCase):
 
     def test_face_detection(self):
         img = Image.open(self.test_x)
-        bboxs, _ = preprocess.Detector().detect([img])
-        face_img = preprocess.crop_face(np.array(img), bboxs[0])
+        bboxs, _ = pipeline.Detector().detect([img])
+        face_img = pipeline.crop_face(np.array(img), bboxs[0])
 
         self.assertGreaterEqual(img.size[0], face_img.shape[0])
         self.assertGreaterEqual(img.size[1], face_img.shape[1])
@@ -33,8 +33,8 @@ class TestPipeline(unittest.TestCase):
     @unittest.skipUnless(torch.cuda.is_available(), 'gpu unavailable')
     def test_face_detection_gpu(self):
         img = Image.open(self.test_x)
-        bboxs, _ = preprocess.Detector(gpu=True).detect([img])
-        face_img = preprocess.crop_face(np.array(img), bboxs[0])
+        bboxs, _ = pipeline.Detector(gpu=True).detect([img])
+        face_img = pipeline.crop_face(np.array(img), bboxs[0])
 
         self.assertGreaterEqual(img.size[0], face_img.shape[0])
         self.assertGreaterEqual(img.size[1], face_img.shape[1])
