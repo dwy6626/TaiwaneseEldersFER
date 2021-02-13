@@ -3,7 +3,7 @@ import os
 
 import torch
 
-from test.sample import SAMPLE_IMAGE
+from fixture import SAMPLE_IMAGE
 from src.model import vgg13
 
 

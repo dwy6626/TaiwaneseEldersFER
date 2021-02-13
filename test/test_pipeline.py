@@ -7,7 +7,7 @@ import numpy as np
 from src import torch_utils
 from src import preprocess
 from src.model import vgg13
-from test.sample import SAMPLE_DATA
+from fixture import SAMPLE_DATA
 
 class TestPipeline(unittest.TestCase):
     def setUp(self):

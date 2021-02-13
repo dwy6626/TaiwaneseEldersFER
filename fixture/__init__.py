@@ -7,4 +7,4 @@ SAMPLE_IMAGE = Image.fromarray(
 )
 
 
-SAMPLE_DATA = ['./test/sample/sample.jpg'], [3]
+SAMPLE_DATA = ['./fixture/sample.jpg'], [3]
