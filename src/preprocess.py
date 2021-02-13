@@ -32,8 +32,7 @@ class Detector:
 
         self.message = NoFaceMessage
 
-    def detect(self, imgs, save_path=None, bbox=None):
-
+    def detect(self, imgs):
         # Detect faces
         with torch.no_grad():
             results = self.detector.detect(imgs)
