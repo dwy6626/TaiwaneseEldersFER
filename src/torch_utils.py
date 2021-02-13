@@ -29,25 +29,17 @@ class FaceDataset(Dataset):
 
 
 def pad_square(img):
-    to_pil = False
-    if isinstance(img, Image.Image):
-        to_pil = True
-        img = np.array(img)
-
-    if img.ndim == 2:
-        img = np.expand_dims(img, -1)
-    h, w, c = img.shape
+    # input PIL and out PIL image
+    img = np.array(img)
+    h, w, _ = img.shape
     if h > w:
         pad = (h-w) // 2
         pad = [(0, 0), (pad, pad), (0, 0)]
-        img = np.pad(img, pad)
     elif w > h:
         pad = (w-h) // 2
         pad = [(pad, pad), (0, 0), (0, 0)]
-        img = np.pad(img, pad)
-    if to_pil:
-        img = Image.fromarray(img)
-    return img
+    img = np.pad(img, pad)
+    return Image.fromarray(img)
 
 
 def evaluate(func, loader, gpu=1):
