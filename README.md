@@ -14,12 +14,10 @@ please install Python 3.9 first
 python -m pip install -r requirements.txt
 ```
 
-### Download weight
-
 ## Run model
 
 ```
-python main.py --input example_face.png
+python main.py --input example_face.png --checkpoint weight/fine_tune.ckpt
 ```
 
 ## Run Test
