@@ -17,12 +17,26 @@ python -m pip install -r requirements.txt
 ## Run model
 
 ```
-python main.py --input example_face.png --checkpoint weight/best.ckpt
+python main.py --input fixture/sample.jpg
+```
+
+```
+python main.py --input_folder example_folder
+```
+
+p.s. only the face with largest confidence will be evaluated
+
+### Pretrained model
+
+Loading the Pytorch state_dict:
+
+```
+--checkpoint weight/best.ckpt
 ```
 
 There are 2 different pretrained weights
 
-- `best.ckpt` is the cross-dataset model
+- `best.ckpt` is the cross-dataset model (default)
 - `fine_tune.ckpt` is the fine-tuned weights on TW old faces.
 
 ## Run Test
