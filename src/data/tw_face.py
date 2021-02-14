@@ -26,7 +26,8 @@ and original:
     (a: Neutral; b: Happy; c: Sad; d: Angry; e: Disgusted; f: Fearful; g: Surprised).
 """
 
-label_mapping = {
+LABELS = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Suprise', 'Neutral']
+LABEL_MAPPING = {
     'a': 6,
     'b': 3,
     'c': 4,
@@ -53,7 +54,7 @@ def read_data(subset=None):
             continue
         subject_idx = match_obj[1]
         expression = match_obj[2]
-        y = label_mapping[expression]
+        y = LABEL_MAPPING[expression]
         x = os.path.join(DATA_FOLDER, x)
         if is_old(subject_idx):
             old_x.append(x)
@@ -71,3 +72,10 @@ def read_data(subset=None):
         return old_x, old_y
 
     return old_x + young_x, np.append(old_y, young_y)
+
+
+def data_exist():
+    for x in os.listdir(DATA_FOLDER):
+        if re.match(FILE_REGEX, x) is not None:
+            return True
+    return False

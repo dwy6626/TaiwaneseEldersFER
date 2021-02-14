@@ -1,24 +1,34 @@
-from enum import Enum
-
-
+from PIL import Image
 import numpy as np
 import torch
 
 
-def load_image
+def load_image(path):
+    return Image.open(path).convert('RGB')
+
+
+def load_face(path, gpu=False):
+    img = load_image(path)
+    bboxs, probs = Detector(gpu=gpu).detect([img])
+    print('detected face with confidence: {:.2f}'.format(probs[0]))
+    return crop_face(img, bboxs[0])
+
+
+def load_faces(paths, gpu=False):
+    # FIXME: may OOM if image number is too large
+    imgs = [load_image(path) for path in paths]
+    bboxs, _ = Detector(gpu=gpu).detect(imgs)
+    return [crop_face(img, bbox) for img, bbox in zip(imgs, bboxs)]
 
 
 def crop_face(img, bbox):
-    return img[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+    arr = np.array(img)
+    arr = arr[bbox[1]:bbox[3], bbox[0]:bbox[2]]
+    return Image.fromarray(arr)
 
 
-class NoFaceMessage(Enum):
-    NOFACE = 0
-    ONE_FACE = 1
-    TWO_FACE_WITH_BBOX = 20
-    TWO_FACE_WITH_PREVIOUS = 21
-    TWO_FACE_BUT_CANNNOT_DETERMINE = 2
-    FACE_BUT_THRESHOLDED = -1
+class NoFaceError(Exception):
+    pass
 
 
 class Detector:
@@ -33,8 +43,6 @@ class Detector:
         )
         self.threshold = threshold
 
-        self.message = NoFaceMessage
-
     def detect(self, imgs):
         # Detect faces
         with torch.no_grad():
@@ -45,6 +53,7 @@ class Detector:
         batch_probs = []
         for b, p in zip(*results):
             if b is not None:
+                # face with largest confidence
                 b = b[0]
                 b[2:] = np.ceil(b[2:])
                 b[:2] = np.floor(b[:2])
@@ -52,7 +61,6 @@ class Detector:
                 batch_boxes.append(b.astype(int))
                 batch_probs.append(p[0])
             else:
-                batch_boxes.append(None)
-                batch_probs.append(None)
+                raise NoFaceError
 
         return batch_boxes, batch_probs

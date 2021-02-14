@@ -42,17 +42,21 @@ def pad_square(img):
     return Image.fromarray(img)
 
 
-def evaluate(func, loader, gpu=1):
-    results = []
+def evaluate_batch(func, x, gpu=False):
     with torch.no_grad():
-        for x, y in loader:
-            if gpu:
-                x = x.cuda()
-            out = func(x)
-            if gpu:
-                out = out.cpu()
-            out = out.data.numpy()
-            results.append(out)
+        if gpu:
+            x = x.cuda()
+        out = func(x)
+        if gpu:
+            out = out.cpu()
+        return out.data.numpy()
+
+
+def evaluate(func, loader, gpu=False):
+    results = []
+    for x, _ in loader:
+        out = evaluate_batch(func, x, gpu)
+        results.append(out)
 
     results = np.concatenate(results)
     return results.reshape(-1, results.shape[1])

@@ -8,3 +8,4 @@ SAMPLE_IMAGE = Image.fromarray(
 
 
 SAMPLE_DATA = ['./fixture/sample.jpg'], [3]
+NO_FACE_DATA = ['./fixture/no_face.png'], [0]

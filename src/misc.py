@@ -1,7 +1,33 @@
+import mimetypes
+import os
+
+
 import numpy as np
 
 
 from src.data import tw_face
+
+
+IMAGE_EXTENSIONS = [
+    ext for ext in mimetypes.types_map if mimetypes.types_map[ext].split('/')[0] == 'image'
+]
+
+
+def is_image(path):
+    for ext in IMAGE_EXTENSIONS:
+        if path.endswith(ext):
+            return True
+    return False
+
+
+def list_image(folder):
+    images = []
+    for fname in os.listdir(folder):
+        path = os.path.join(folder, fname)
+        if not is_image(path):
+            continue
+        images.append(path)
+    return images
 
 
 def display_result(name_arr, res_arr):
