@@ -1,7 +1,5 @@
 # Facial Expression Recognition for Taiwanese Elders
 
-(under maintenance)
-
 ## Setup
 
 ### Python Version
@@ -63,4 +61,4 @@ python main.py
 
 ## Reference
 
-- in preparation
+- De-Wei Ye, Automatic Facial Expression Recognition for Taiwanese Elders with Deep Convolutional Neural Network,” Master’s thesis, Graduate Institute of Communication Engineering, National Taiwan University, 2020.
