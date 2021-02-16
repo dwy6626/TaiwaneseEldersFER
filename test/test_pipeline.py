@@ -18,7 +18,7 @@ class TestPipeline(unittest.TestCase):
 
     def test_main_pipeline(self):
         torch_transform = vgg13.get_preprocess()
-        dataset = torch_utils.FaceDataset(*SAMPLE_DATA, torch_transform)
+        dataset = torch_utils.FaceDataset([self.test_x], torch_transform)
 
         out = self.model(torch.unsqueeze(dataset[0][0], 0))
         self.assertEqual(out.shape, (1, 7))

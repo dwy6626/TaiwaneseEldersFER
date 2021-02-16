@@ -5,27 +5,43 @@ from PIL import Image
 
 
 class FaceDataset(Dataset):
-    def __init__(self, x, y, preprocess_func, fromarray=False):
+    def __init__(self, x, preprocess_func, x_image=False):
+        """
+        x: list of paths or PIL images
+        """
+        self.x = x
         self.data_list = x
-        self.y = y
         self.pipeline = preprocess_func
-        self.fromarray = fromarray
+        self.x_image = x_image
 
     def __getitem__(self, i):
         # get file name and load
         p = self.data_list[i]
-        if self.fromarray:
-            x = Image.fromarray(p).convert('RGB')
+        if self.x_image:
+            x = p.convert('RGB')
         else:
             x = Image.open(p).convert('RGB')
 
         # pad to square
         x = pad_square(x)
         x = self.pipeline(x)
-        return x, self.y[i]
+        return x,
 
     def __len__(self):
-        return self.y.shape[0]
+        return len(self.x)
+
+
+class FaceDatasetWithLabel(FaceDataset):
+    def __init__(self, x, y, preprocess_func):
+        """
+        x: list of paths
+        y: label array
+        """
+        super().__init__(x, preprocess_func, x_image=False)
+        self.y = y
+
+    def __getitem__(self, i):
+        return super().__getitem__(i), self.y[i]
 
 
 def pad_square(img):
@@ -54,7 +70,7 @@ def evaluate_batch(func, x, gpu=False):
 
 def evaluate(func, loader, gpu=False):
     results = []
-    for x, _ in loader:
+    for x, *_ in loader:
         out = evaluate_batch(func, x, gpu)
         results.append(out)
 
@@ -63,9 +79,6 @@ def evaluate(func, loader, gpu=False):
 
 
 def eval_acc(model, loader, truths, name=None, gpu=1):
-    model.eval()
-    if gpu:
-        model.cuda()
     results = evaluate(model, loader, gpu=gpu)
     predictions = np.argmax(results, axis=1)
     acc = np.where(predictions == truths)[0].size / truths.size

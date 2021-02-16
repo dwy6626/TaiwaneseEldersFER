@@ -3,6 +3,10 @@ import numpy as np
 import torch
 
 
+
+from src import torch_utils
+
+
 def load_image(path):
     return Image.open(path).convert('RGB')
 
@@ -17,6 +21,12 @@ def load_face(path, gpu=False):
 def load_faces(paths, gpu=False):
     # FIXME: may OOM if image number is too large
     imgs = [load_image(path) for path in paths]
+
+    # equal size
+    size = min((256, max((img.size[0] for img in imgs))))
+    imgs = [torch_utils.pad_square(img) for img in imgs]
+    imgs = [img.resize((size, size)) for img in imgs]
+
     bboxs, _ = Detector(gpu=gpu).detect(imgs)
     return [crop_face(img, bbox) for img, bbox in zip(imgs, bboxs)]
 
